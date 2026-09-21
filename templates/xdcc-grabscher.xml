@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>XDCC-Grabscher</Name>
+
+  <Repository>ghcr.io/captainepix/xdcc-grabscher:latest</Repository>
+  <Registry>https://github.com/CaptainEpix/xdcc-grabscher/pkgs/container/xdcc-grabscher</Registry>
+
+  <Network>bridge</Network>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+
+  <Icon>https://raw.githubusercontent.com/CaptainEpix/xdcc-grabscher-unraid/main/xg-icon.png</Icon>
+
+  <WebUI>http://[IP]:[PORT:5556]</WebUI>
+
+  <Overview>XG (XDCC Grabscher) is a web-based IRC/XDCC download manager. This container packages the maintained Mono/Docker compatibility fork, including native IRC TLS support, NickServ authentication fixes, and modern browser/dashboard compatibility improvements.</Overview>
+
+  <Support>https://github.com/CaptainEpix/xdcc-grabscher/issues</Support>
+  <Project>https://github.com/CaptainEpix/xdcc-grabscher</Project>
+
+  <TemplateURL>https://raw.githubusercontent.com/CaptainEpix/xdcc-grabscher-unraid/main/templates/xdcc-grabscher.xml</TemplateURL>
+
+  <ReadMe>https://raw.githubusercontent.com/CaptainEpix/xdcc-grabscher/mono-2026/README.md</ReadMe>
+
+  <Category>Downloaders:</Category>
+
+  <ExtraSearchTerms>XDCC IRC XG IRC downloader</ExtraSearchTerms>
+
+  <Requires>Outbound internet access. IRC servers, channels, and any required NickServ credentials are configured through the XG WebUI.</Requires>
+
+  <Changes>Initial Unraid Community Applications release based on XG 3.3.2.0.</Changes>
+  <Date>2026-09-20</Date>
+
+  <License>GPLv2</License>
+
+  <Config
+    Name="WebUI"
+    Target="5556"
+    Default="5556"
+    Mode="tcp"
+    Description="HTTP port used by the XG WebUI."
+    Type="Port"
+    Display="always"
+    Required="true"
+    Mask="false"/>
+
+  <Config
+    Name="Appdata"
+    Target="/config"
+    Default="/mnt/user/appdata/xdcc-grabscher"
+    Mode="rw"
+    Description="Persistent XG configuration, database, and application state."
+    Type="Path"
+    Display="always"
+    Required="true"
+    Mask="false"/>
+
+  <Config
+    Name="Downloads"
+    Target="/config/.config/XG/dl"
+    Default="/mnt/user/downloads/xdcc-grabscher"
+    Mode="rw"
+    Description="Directory where completed and in-progress XDCC downloads are stored."
+    Type="Path"
+    Display="always"
+    Required="true"
+    Mask="false"/>
+</Container>
