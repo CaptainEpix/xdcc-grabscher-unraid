@@ -13,7 +13,9 @@
 
   <WebUI>http://[IP]:[PORT:5556]</WebUI>
 
-  <Overview>XG (XDCC Grabscher) is a web-based IRC/XDCC download manager. This container packages the maintained Mono/Docker compatibility fork, including native IRC TLS support, NickServ authentication fixes, and modern browser/dashboard compatibility improvements.</Overview>
+  <Overview>XG (XDCC Grabscher) is a web-based IRC/XDCC download manager. This container packages the maintained Mono/Docker compatibility fork, including native IRC TLS support, NickServ authentication fixes, and modern browser/dashboard compatibility improvements.
+
+XG can also act as a Newznab indexer and a SABnzbd download client, so Prowlarr, Sonarr and Radarr can search XDCC bots and send grabs to XG. Optional passive (reverse) DCC support lets XG download from bots that cannot connect out, and downloads grabbed by Sonarr/Radarr can go into a folder per category. See the ReadMe for the setup steps.</Overview>
 
   <Support>https://github.com/CaptainEpix/xdcc-grabscher/issues</Support>
   <Project>https://github.com/CaptainEpix/xdcc-grabscher</Project>
@@ -24,12 +26,22 @@
 
   <Category>Downloaders:</Category>
 
-  <ExtraSearchTerms>XDCC IRC XG IRC downloader</ExtraSearchTerms>
+  <ExtraSearchTerms>XDCC IRC XG IRC downloader Prowlarr Sonarr Radarr Newznab SABnzbd</ExtraSearchTerms>
 
-  <Requires>Outbound internet access. IRC servers, channels, and any required NickServ credentials are configured through the XG WebUI.</Requires>
+  <Requires>Outbound internet access. IRC servers, channels, and any required NickServ credentials are configured through the XG WebUI. Passive DCC (optional) needs the chosen ports forwarded on your router to this server.</Requires>
 
-  <Changes>Initial Unraid Community Applications release based on XG 3.3.2.0.</Changes>
-  <Date>2026-09-20</Date>
+  <Changes>
+### 2026-09-26 - XG 3.3.3.0
+- Prowlarr, Sonarr and Radarr integration: XG works as a Newznab indexer and a SABnzbd download client.
+- Passive (reverse) DCC support, off by default. Set XG_PASSIVE_DCC_PORTS and forward the same ports.
+- Optional folder per category (tv, movies, ...) with XG_CATEGORY_FOLDERS.
+- Better handling of bots that refuse connections, stay silent or send broken offers.
+- Search matches accented and apostrophe names; many stability fixes.
+
+### 2026-09-20 - XG 3.3.2.0
+- Initial Unraid Community Applications release.
+  </Changes>
+  <Date>2026-09-26</Date>
 
   <License>GPLv2</License>
 
@@ -60,9 +72,107 @@
     Target="/config/.config/XG/dl"
     Default="/mnt/user/downloads/xdcc-grabscher"
     Mode="rw"
-    Description="Directory where completed and in-progress XDCC downloads are stored."
+    Description="Directory where completed and in-progress XDCC downloads are stored. With XG_CATEGORY_FOLDERS set, Sonarr/Radarr grabs go into subfolders such as tv and movies."
     Type="Path"
     Display="always"
     Required="true"
+    Mask="false"/>
+  <Config
+    Name="Category folders"
+    Target="XG_CATEGORY_FOLDERS"
+    Default=""
+    Mode=""
+    Description="Optional. Put downloads grabbed by Sonarr/Radarr into a subfolder named after their category. Use all (every category) or a list such as tv,movies. Leave empty to keep everything in the download folder."
+    Type="Variable"
+    Display="always"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Passive DCC ports"
+    Target="XG_PASSIVE_DCC_PORTS"
+    Default=""
+    Mode=""
+    Description="Optional. Ports XG listens on for passive (reverse) DCC, for example 50000-50004. Also fill in the matching Passive DCC port entries below and forward the same ports on your router. Leave empty to disable passive DCC."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Passive DCC public IP"
+    Target="XG_PASSIVE_DCC_IP"
+    Default=""
+    Mode=""
+    Description="Optional. Your public IPv4 address for passive DCC. Leave empty to detect it automatically."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Silent bot timeout"
+    Target="XG_COMPAT_SILENT_BOT_SECONDS"
+    Default=""
+    Mode=""
+    Description="Optional. Seconds before a Sonarr/Radarr grab fails when the bot does not answer at all. Leave empty for the default of 900 (15 minutes)."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Passive DCC port 1"
+    Target="50000"
+    Default=""
+    Mode="tcp"
+    Description="Optional. Host port for passive DCC; set it to 50000 when XG_PASSIVE_DCC_PORTS includes 50000. Leave empty when passive DCC is off."
+    Type="Port"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Passive DCC port 2"
+    Target="50001"
+    Default=""
+    Mode="tcp"
+    Description="Optional. Host port for passive DCC; set it to 50001 when XG_PASSIVE_DCC_PORTS includes 50001. Leave empty when passive DCC is off."
+    Type="Port"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Passive DCC port 3"
+    Target="50002"
+    Default=""
+    Mode="tcp"
+    Description="Optional. Host port for passive DCC; set it to 50002 when XG_PASSIVE_DCC_PORTS includes 50002. Leave empty when passive DCC is off."
+    Type="Port"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Passive DCC port 4"
+    Target="50003"
+    Default=""
+    Mode="tcp"
+    Description="Optional. Host port for passive DCC; set it to 50003 when XG_PASSIVE_DCC_PORTS includes 50003. Leave empty when passive DCC is off."
+    Type="Port"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Passive DCC port 5"
+    Target="50004"
+    Default=""
+    Mode="tcp"
+    Description="Optional. Host port for passive DCC; set it to 50004 when XG_PASSIVE_DCC_PORTS includes 50004. Leave empty when passive DCC is off."
+    Type="Port"
+    Display="advanced"
+    Required="false"
     Mask="false"/>
 </Container>
